@@ -81,7 +81,7 @@ RUN apt-get update && \
 
 ENV APP_NAME=${APP_NAME}
 ENV APP_SPECIAL="no"
-ENV APP_CMD="/usr/bin/wezterm start -- bash -c 'source /apps/${APP_NAME}/venv/bin/activate && ciclone -h; exec bash'"
+ENV APP_CMD="/usr/bin/wezterm start -- bash -c 'ciclone -h; exec bash'"
 ENV PROCESS_NAME="wezterm"
 ENV APP_DATA_DIR_ARRAY=""
 ENV DATA_DIR_ARRAY=""
