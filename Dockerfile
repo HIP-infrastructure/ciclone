@@ -40,7 +40,7 @@ RUN apt-get update && \
 # The sed expression is silencing `printmsg` calls with end=\r that are causing
 # a lot of logs to be outputted. They don't play well with GitLab (and other CI
 # in general).
-ARG FSL_VERSION=6.0.7.16
+ARG FSL_VERSION=6.0.7.17
 ADD https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py .
 RUN apt-get update && \
     apt-get upgrade -y && \
@@ -55,11 +55,11 @@ RUN apt-get update && \
     locale-gen en_US.UTF-8 en_GB.UTF-8 && \
     sed -i -E "s/(printmsg\(([^,]+, )?end='(\\\\r)?')/# SILENCE \\1/g" ./fslinstaller.py && \
     python3 ./fslinstaller.py \
+        --conda \
         -d /usr/local/fsl \
         -V ${FSL_VERSION} \
-        --no_self_update \
         --skip_registration \
-    && \
+        --no_self_update && \
     rm -rf /usr/local/fsl/src && \
     rm fslinstaller.py && \
     apt-get autoremove -y --purge && \
