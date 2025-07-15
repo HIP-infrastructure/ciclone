@@ -7,14 +7,14 @@ then
     APP_VERSION=$(ls /usr/local/freesurfer/)
 
     # Create a license file
-    if [ -s "$HOME/run.env" ]; then
-        #echo "Loading license from $HOME/run.env"
-        . "$HOME/run.env"
+    if [ -s "$HOME/.env" ]; then
+        #echo "Loading license from $HOME/.env"
+        . "$HOME/.env"
     else
-        echo "No license file found in $HOME/run.env"
+        echo "No license file found in $HOME/.env"
     fi
 
-    echo -e "$FREESURFER_LICENSE" > "$HOME/license.txt"
+    echo -e "$CICLONE_FSF_LICENSE" > "$HOME/license.txt"
 
     export FREESURFER_HOME=/usr/local/freesurfer/${APP_VERSION}
     export FS_LICENSE=$HOME/license.txt

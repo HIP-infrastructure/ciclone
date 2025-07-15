@@ -17,17 +17,18 @@ LABEL app_tag=$TAG
 WORKDIR /apps/${APP_NAME}
 
 # Step 1 : Install Freesurfer
-ARG FREESURFER_VERSION=7.3.2
+ARG FREESURFER_VERSION=8.0.0
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install --no-install-recommends -y \
-    curl language-pack-en binutils libx11-dev gettext \
-    xterm x11-apps perl make csh tcsh file bc xorg \
-    xorg-dev xserver-xorg-video-intel libncurses5 \
-    libgomp1  libice6 libjpeg62 libsm6 libxft2 \
-    libxmu6 libxt6 libquadmath0 libwayland-cursor0 \
-    libxcb-icccm4 libxcb-randr0 libxcb-render-util0 \
-    libxcb-render0 libxcb-xinerama0 libxcb-xinput0 && \
+    curl language-pack-en binutils \
+    libx11-dev gettext xterm x11-apps perl \
+    make csh tcsh file bc xorg xorg-dev \
+    xserver-xorg-video-intel libncurses5 \
+    libgomp1 libjpeg62 libpcre2-16-0 libquadmath0 \
+    libxcb-icccm4 libxcb-render-util0 libxcb-render0 \
+    libxcb-shape0 libxcb-xinerama0 libxcb-xinput0 \
+    libxft2 libxi6 libxrender1 libxss1 && \
     curl -sSO https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/${FREESURFER_VERSION}/freesurfer_ubuntu22-${FREESURFER_VERSION}_amd64.deb && \
     dpkg -i freesurfer_ubuntu22-${FREESURFER_VERSION}_amd64.deb && \
     rm freesurfer_ubuntu22-${FREESURFER_VERSION}_amd64.deb && \
@@ -46,6 +47,8 @@ RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install --no-install-recommends -y \
         ca-certificates \
+        tar \
+        bzip2 \
         dc \
         file \
         libgomp1 \
@@ -55,7 +58,6 @@ RUN apt-get update && \
     locale-gen en_US.UTF-8 en_GB.UTF-8 && \
     sed -i -E "s/(printmsg\(([^,]+, )?end='(\\\\r)?')/# SILENCE \\1/g" ./fslinstaller.py && \
     python3 ./fslinstaller.py \
-        --conda \
         -d /usr/local/fsl \
         -V ${FSL_VERSION} \
         --skip_registration \
@@ -70,10 +72,13 @@ RUN apt-get update && \
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install --no-install-recommends -y \ 
-    git python3 python3-pip python3-venv && \
+    git python3 python3-pip python3-venv \
+    libxcb-cursor0 && \
     python3 -m venv /apps/${APP_NAME}/venv && \
     . /apps/${APP_NAME}/venv/bin/activate && \
     pip install --no-cache git+https://github.com/floriansipp/CiCLONE/@v${APP_VERSION}#egg=CiCLONE && \
+    chmod 644 /apps/${APP_NAME}/venv/lib/python3.10/site-packages/${APP_NAME}/config/*.yaml && \
+    chmod -R 755 /apps/${APP_NAME}/venv/lib/python3.10/site-packages/${APP_NAME}/config/electrodes && \
     apt-get remove -y --purge git && \
     apt-get autoremove -y --purge && \
     apt-get clean && \
@@ -81,11 +86,11 @@ RUN apt-get update && \
 
 ENV APP_NAME=${APP_NAME}
 ENV APP_SPECIAL="no"
-ENV APP_CMD="/usr/bin/wezterm start -- bash -l -c 'clear && ciclone -h && bash'"
-ENV PROCESS_NAME="wezterm"
+ENV APP_CMD="ciclone"
+ENV PROCESS_NAME="ciclone"
 ENV APP_DATA_DIR_ARRAY=""
 ENV DATA_DIR_ARRAY=""
-ENV CONFIG_ARRAY=".bash_profile run.env"
+ENV CONFIG_ARRAY=".bash_profile"
 
 HEALTHCHECK --interval=10s --timeout=10s --retries=5 --start-period=30s \
   CMD sh -c "/apps/${APP_NAME}/scripts/process-healthcheck.sh \
