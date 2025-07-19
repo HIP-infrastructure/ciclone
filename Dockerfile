@@ -84,6 +84,9 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# MESA_GL_VERSION_OVERRIDE is needed to be able to launch fsl as a subprocess in the container
+ENV MESA_GL_VERSION_OVERRIDE=3.3
+
 ENV APP_NAME=${APP_NAME}
 ENV APP_SPECIAL="no"
 ENV APP_CMD="ciclone"
