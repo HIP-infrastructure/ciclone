@@ -84,10 +84,6 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# We need those two to avoid fsl crashing when being run via ciclone
-ENV LIBGL_ALWAYS_SOFTWARE=1
-ENV MESA_GL_VERSION_OVERRIDE=3.3
-
 ENV APP_NAME=${APP_NAME}
 ENV APP_SPECIAL="no"
 ENV APP_CMD="ciclone"
