@@ -17,7 +17,7 @@ LABEL app_tag=$TAG
 WORKDIR /apps/${APP_NAME}
 
 # Step 1 : Install Freesurfer
-ARG FREESURFER_VERSION=8.0.0
+ARG VERSION_FREESURFER=8.1.0
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install --no-install-recommends -y \
@@ -29,9 +29,9 @@ RUN apt-get update && \
     libxcb-icccm4 libxcb-render-util0 libxcb-render0 \
     libxcb-shape0 libxcb-xinerama0 libxcb-xinput0 \
     libxft2 libxi6 libxrender1 libxss1 && \
-    curl -sSO https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/${FREESURFER_VERSION}/freesurfer_ubuntu22-${FREESURFER_VERSION}_amd64.deb && \
-    dpkg -i freesurfer_ubuntu22-${FREESURFER_VERSION}_amd64.deb && \
-    rm freesurfer_ubuntu22-${FREESURFER_VERSION}_amd64.deb && \
+    curl -sSO https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/${VERSION_FREESURFER}/freesurfer_ubuntu22-${VERSION_FREESURFER}_amd64.deb && \
+    dpkg -i freesurfer_ubuntu22-${VERSION_FREESURFER}_amd64.deb && \
+    rm freesurfer_ubuntu22-${VERSION_FREESURFER}_amd64.deb && \
     apt-get remove -y --purge curl && \
     apt-get autoremove -y --purge && \
     apt-get clean && \
@@ -41,7 +41,7 @@ RUN apt-get update && \
 # The sed expression is silencing `printmsg` calls with end=\r that are causing
 # a lot of logs to be outputted. They don't play well with GitLab (and other CI
 # in general).
-ARG FSL_VERSION=6.0.7.17
+ARG VERSION_FSL=6.0.7.13
 ADD https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py .
 RUN apt-get update && \
     apt-get upgrade -y && \
@@ -59,7 +59,7 @@ RUN apt-get update && \
     sed -i -E "s/(printmsg\(([^,]+, )?end='(\\\\r)?')/# SILENCE \\1/g" ./fslinstaller.py && \
     python3 ./fslinstaller.py \
         -d /usr/local/fsl \
-        -V ${FSL_VERSION} \
+        -V ${VERSION_FSL} \
         --skip_registration \
         --no_self_update && \
     rm -rf /usr/local/fsl/src && \
