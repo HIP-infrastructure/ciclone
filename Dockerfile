@@ -76,7 +76,7 @@ RUN apt-get update && \
     libxcb-cursor0 && \
     python3 -m venv /apps/${APP_NAME}/venv && \
     . /apps/${APP_NAME}/venv/bin/activate && \
-    pip install --no-cache git+https://github.com/floriansipp/CiCLONE/@v${APP_VERSION}#egg=CiCLONE && \
+    pip install --no-cache git+https://github.com/NeuroTech-Platform/CiCLONE/@v${APP_VERSION}#egg=CiCLONE && \
     chmod 644 /apps/${APP_NAME}/venv/lib/python3.10/site-packages/${APP_NAME}/config/*.yaml && \
     chmod -R 755 /apps/${APP_NAME}/venv/lib/python3.10/site-packages/${APP_NAME}/config/electrodes && \
     apt-get remove -y --purge git && \
